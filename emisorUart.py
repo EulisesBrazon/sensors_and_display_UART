@@ -8,7 +8,9 @@ uart= UART(0,9600)
 uart.init(9600, bits=8, parity=0, stop=1)  
 num_decimals = 1000 #every 0 is a decimal
 delay = 1 #one second
-header = b'0xA'
+slaveA = b'0xA'
+slaveB = b'0xB'
+slaveC = b'0xC'
 freeBus = Pin(16, Pin.IN)
 
 #define value for read LM35
@@ -69,11 +71,17 @@ def sendDates():
     distance = readDistance()
     
     #sending values
-    uart.write(header)
+    uart.write(slaveA)
     sendValueFloat(temperature)
     sendValueInt(light)
     sendValueInt(potenciometer)
-    sendValueFloat()
+    sendValueFloat(distance)
+    
+    uart.write(slaveB)
+    sendValueInt(potenciometer)
+    
+    uart.write(slaveC)
+    sendValueInt(distance)
     
 def main():
     while True :
@@ -86,11 +94,3 @@ def main():
 if __name__ == '__main__':
     main()
     
-    
-
-
-
-
-
-
-
